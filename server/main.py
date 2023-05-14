@@ -4,6 +4,8 @@ import uvicorn
 from fastapi import FastAPI, File, Form, HTTPException, Depends, Body, UploadFile
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.staticfiles import StaticFiles
+from pathlib import Path
+import sys
 
 from models.api import (
     DeleteRequest,
@@ -153,3 +155,20 @@ async def startup():
 
 def start():
     uvicorn.run("server.main:app", host="0.0.0.0", port=8000, reload=True)
+
+#stuff added by JACK
+
+# get the absolute path of the current file
+file_path = Path(__file__).resolve()
+
+# construct the path to the .env file relative to the current file
+llm_dir = file_path.parents[2] / 'ConversationalLLM'
+
+sys.path.append(str(llm_dir))
+
+import ConversationalDocumentSearchingTool
+
+@app.post("/AskLLM")
+def AskLLM(query: str,gpt: bool = False):
+    response = ConversationalDocumentSearchingTool.AskLLM(query,gpt)
+    return(response)

@@ -1,6 +1,16 @@
 from datastore.datastore import DataStore
+from dotenv import load_dotenv
 import os
+from pathlib import Path
 
+# get the absolute path of the current file
+file_path = Path(__file__).resolve()
+
+# construct the path to the .env file relative to the current file
+env_path = file_path.parents[3] / 'env_variables.env'
+
+# access the environment variable
+load_dotenv(dotenv_path=env_path)
 
 async def get_datastore() -> DataStore:
     datastore = os.environ.get("DATASTORE")
